@@ -25,25 +25,27 @@ LABEL \
   org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
   maintainer="Tuan Dangschulz <tuan@example.com>"
 
+# Create persistent volume folder
 RUN mkdir -p /var/db/tiddly
 
 # Copy root filesystem
 COPY rootfs /
 
 # Install required packages
-RUN apk add --no-cache curl bash unzip git
+RUN apk add --no-cache bash curl unzip git
 
-# Install Deno using the official install script (works on musl/Alpine)
-RUN curl -fsSL https://deno.land/install.sh | bash
+# Install Deno (using logic from official alpine.dockerfile)
+ENV DENO_VERSION=1.44.1
 
-# Move Deno binary to /usr/local/bin for global access
-RUN mv /root/.deno/bin/deno /usr/local/bin/deno && chmod +x /usr/local/bin/deno
+RUN \
+  if [ "$BUILD_ARCH" = "amd64" ]; then ARCH="x86_64"; \
+  elif [ "$BUILD_ARCH" = "aarch64" ]; then ARCH="aarch64"; \
+  else echo "Unsupported architecture: $BUILD_ARCH" && exit 1; fi && \
+  curl -fsSL "https://dl.deno.land/release/v${DENO_VERSION}/deno-${ARCH}-unknown-linux-gnu.zip" -o deno.zip && \
+  unzip deno.zip && \
+  rm deno.zip && \
+  chmod 755 deno && \
+  mv deno /usr/local/bin/deno
 
-# Optional: Verify Deno installation
-RUN deno --version
-
-# Set working directory if needed
+# Set working directory (optional)
 WORKDIR /opt/tiddlywiki
-
-
-# https://github.com/denoland/deno/releases/download/v2.4.3/deno-x86_64-unknown-linux-gnu.zip
