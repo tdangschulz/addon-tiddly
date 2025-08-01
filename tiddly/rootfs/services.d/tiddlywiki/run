@@ -1,9 +1,19 @@
 #!/command/with-contenv bashio
 
 PORT=$(bashio::config 'port')
-ARGS=$(bashio::config 'extra_args')
+DB_PATH=$(bashio::config 'db_path')
+HASH=$(bashio::config 'admin_password_hash')
+SALT=$(bashio::config 'admin_password_salt')
 
-mkdir -p /data/wiki
+mkdir -p "$(dirname "$DB_PATH")"
 
-exec deno run --allow-read --allow-write --allow-net --allow-env \
-  /opt/tiddlywiki/tiddlywiki-deno.ts /data/wiki --server $PORT $ARGS
+export ADMIN_PASSWORD_HASH=$HASH
+export ADMIN_PASSWORD_SALT=$SALT
+export DB_PATH=$DB_PATH
+
+exec deno run --unstable-broadcast-channel \
+  --allow-env \
+  --allow-read="$(dirname "$DB_PATH")" \
+  --allow-write="$(dirname "$DB_PATH")" \
+  --allow-net=":${PORT}" \
+  https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts

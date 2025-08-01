@@ -17,14 +17,12 @@ RUN apk add --no-cache \
 # Install Deno (latest stable release)
 RUN curl -fsSL https://deno.land/install.sh | sh
 
+# Create persistent db folder
+RUN mkdir -p /var/db/tiddly
+
 # Create workspace
 WORKDIR /opt/tiddlywiki
 
-# Clone TiddlyPWA (official fork of TiddlyWiki + PWA support)
-RUN git clone https://codeberg.org/valpackett/tiddlypwa.git .
-
-# Optional: ensure the Deno entrypoint exists
-RUN test -f ./tiddlywiki-deno.ts
 
 # Build arguments
 ARG BUILD_ARCH
