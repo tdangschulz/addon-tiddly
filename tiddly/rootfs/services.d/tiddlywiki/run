@@ -1,0 +1,9 @@
+#!/command/with-contenv bashio
+
+PORT=$(bashio::config 'port')
+ARGS=$(bashio::config 'extra_args')
+
+mkdir -p /data/wiki
+
+exec deno run --allow-read --allow-write --allow-net --allow-env \
+  /opt/tiddlywiki/tiddlywiki-deno.ts /data/wiki --server $PORT $ARGS

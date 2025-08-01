@@ -1,0 +1,42 @@
+name: TiddlyWiki
+slug: tiddlywiki
+description: Run a self-hosted TiddlyWiki inside Home Assistant OS
+version: 1.0.0
+url: https://github.com/<your-username>/hassio-addon-tiddlywiki
+webui: http://[HOST]:[PORT:8080]
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: application
+boot: auto
+init: false
+panel_icon: mdi:book-open-variant
+ports:
+  8080/tcp: 8080
+ports_description:
+  8080/tcp: Web interface (TiddlyWiki server)
+map:
+  - config:rw
+  - ssl
+  - share:rw
+  - media:rw
+  - backup:rw
+options:
+  port: 8080
+  extra_args: ""
+schema:
+  port: int
+  extra_args: str
+image: ghcr.io/<your-username>/tiddlywiki-{arch}
+image_prefix: tiddlywiki
+image_build: true
+build_from: Dockerfile
+build_args:
+  - BUILD_FROM: ghcr.io/home-assistant/amd64-base:latest
+  - BUILD_ARCH: amd64
+  - BUILD_VERSION: 1.0.0
+  - BUILD_ADDON_SLUG: tiddlywiki
+  - BUILD_ADDON_NAME: TiddlyWiki
+  - BUILD_ADDON_DESCRIPTION: Run a self-hosted TiddlyWiki inside Home Assistant OS
+  - BUILD_ADDON_URL:  
