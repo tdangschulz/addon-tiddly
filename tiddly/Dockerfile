@@ -11,11 +11,11 @@ RUN apk add --no-cache \
     unzip \
     git \
     coreutils \
-    bash
+    bash \
+    curl
 
 # Install Deno (latest stable release)
-RUN wget -qO /usr/local/bin/deno https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu && \
-    chmod +x /usr/local/bin/deno
+RUN curl -fsSL https://deno.land/install.sh | sh
 
 # Create workspace
 WORKDIR /opt/tiddlywiki

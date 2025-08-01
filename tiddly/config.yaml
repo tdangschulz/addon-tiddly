@@ -1,7 +1,7 @@
 name: Tiddly Wiki
 slug: tiddly
 description: Run a self-hosted TiddlyWiki PWA with Deno inside Home Assistant OS
-version: 1.0.0
+version: 1.0.1
 url: https://github.com/tdangschulz/addon-tiddly
 webui: http://[HOST]:[PORT:8080]
 arch:
