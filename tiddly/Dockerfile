@@ -35,8 +35,8 @@ RUN apk add --no-cache curl bash unzip git
 
 #  Install architecture-specific Deno binary (musl builds)
 RUN \
-  if [ "$BUILD_ARCH" = "amd64" ]; then DENO_ARCH="deno-x86_64-unknown-linux-gnu"; \
-  elif [ "$BUILD_ARCH" = "aarch64" ]; then DENO_ARCH="deno-aarch64-unknown-linux-gnu"; \
+  if [ "$BUILD_ARCH" = "amd64" ]; then DENO_ARCH="x86_64-unknown-linux-gnu"; \
+  elif [ "$BUILD_ARCH" = "aarch64" ]; then DENO_ARCH="aarch64-unknown-linux-gnu"; \
   else echo "Unsupported architecture: $BUILD_ARCH" && exit 1; fi && \
   curl -fsSL "https://github.com/denoland/deno/releases/download/v2.4.3/deno-${DENO_ARCH}.zip" -o /usr/local/bin/deno && \
   chmod +x /usr/local/bin/deno
@@ -48,4 +48,4 @@ RUN deno --version
 WORKDIR /opt/tiddlywiki
 
 
-# https://github.com/denoland/deno/releases/download/v2.4.3/deno-aarch64-unknown-linux-gnu.zip
+# https://github.com/denoland/deno/releases/download/v2.4.3/deno-x86_64-unknown-linux-gnu.zip
