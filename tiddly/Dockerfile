@@ -15,7 +15,9 @@ RUN apk add --no-cache \
     curl
 
 # Install Deno (latest stable release)
-RUN curl -fsSL https://deno.land/install.sh | sh
+# Installiere Deno über offizielles Install-Skript
+RUN curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sh && \
+    ln -s /usr/local/bin/deno /usr/bin/deno
 
 # Create persistent db folder
 RUN mkdir -p /var/db/tiddly
