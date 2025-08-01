@@ -27,4 +27,3 @@ options:
 schema:
   port: int
   extra_args: str
-#image: ghcr.io/<your-username>/tiddlywiki-pwa-{arch}
