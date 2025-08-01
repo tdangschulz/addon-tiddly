@@ -33,18 +33,11 @@ COPY rootfs /
 # Install required packages
 RUN apk add --no-cache curl bash unzip git
 
-#  Install architecture-specific Deno binary (musl builds)
-#  Install architecture-specific Deno binary from .zip archive
-RUN \
-  if [ "$BUILD_ARCH" = "amd64" ]; then DENO_ARCH="x86_64-unknown-linux-gnu"; \
-  elif [ "$BUILD_ARCH" = "aarch64" ]; then DENO_ARCH="aarch64-unknown-linux-gnu"; \
-  else echo "Unsupported architecture: $BUILD_ARCH" && exit 1; fi && \
-  curl -fsSL "https://github.com/denoland/deno/releases/download/v2.4.3/deno-${DENO_ARCH}.zip" -o /tmp/deno.zip && \
-  unzip /tmp/deno.zip -d /tmp/deno && \
-  mv /tmp/deno/deno /usr/local/bin/deno && \
-  chmod +x /usr/local/bin/deno && \
-  rm -rf /tmp/deno*
+# Install Deno using the official install script (works on musl/Alpine)
+RUN curl -fsSL https://deno.land/install.sh | bash
 
+# Move Deno binary to /usr/local/bin for global access
+RUN mv /root/.deno/bin/deno /usr/local/bin/deno && chmod +x /usr/local/bin/deno
 
 # Optional: Verify Deno installation
 RUN deno --version
