@@ -1,5 +1,5 @@
 name: TiddlyWiki
-slug: tiddlywiki
+slug: tiddly
 description: Run a self-hosted TiddlyWiki inside Home Assistant OS
 version: 1.0.0
 url: https://github.com/<your-username>/hassio-addon-tiddlywiki
