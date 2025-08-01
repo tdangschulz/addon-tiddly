@@ -7,10 +7,18 @@ SALT=$(bashio::config 'admin_password_salt')
 
 mkdir -p "$(dirname "$DB_PATH")"
 
+# Log Konfiguration
+echo "[INFO] Starting TiddlyPWA on port $PORT"
+echo "[INFO] DB path: $DB_PATH"
+echo "[INFO] Admin password hash is ${#HASH} characters long"
+echo "[INFO] Admin salt is ${#SALT} characters long"
+
+# Export als Umgebungsvariablen für run.ts
 export ADMIN_PASSWORD_HASH=$HASH
 export ADMIN_PASSWORD_SALT=$SALT
 export DB_PATH=$DB_PATH
 
+# Deno-Start mit voller Log-Ausgabe
 exec deno run --unstable-broadcast-channel \
   --allow-env \
   --allow-read="$(dirname "$DB_PATH")" \
