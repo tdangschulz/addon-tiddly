@@ -1,6 +1,33 @@
-# Define base image (Home Assistant base add-on image)
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:18.0.3
-FROM ${BUILD_FROM}
+ARG DENO_VERSION=2.4.3
+ARG BIN_IMAGE=denoland/deno:bin-${DENO_VERSION}
+FROM ${BIN_IMAGE} AS bin
+
+
+FROM gcr.io/distroless/cc AS cc
+
+FROM ghcr.io/hassio-addons/base:18.0.3
+
+
+# Inspired by https://github.com/dojyorin/deno_docker_image/blob/master/src/alpine.dockerfile
+COPY --from=cc --chown=root:root --chmod=755 /lib/*-linux-gnu/* /usr/local/lib/
+COPY --from=cc --chown=root:root --chmod=755 /lib/ld-linux-* /lib/
+
+RUN addgroup --gid 1000 deno \
+  && adduser --uid 1000 --disabled-password deno --ingroup deno \
+  && mkdir /deno-dir/ \
+  && chown deno:deno /deno-dir/ \
+  && mkdir /lib64 \
+  && ln -s /usr/local/lib/ld-linux-* /lib64/
+
+ENV LD_LIBRARY_PATH="/usr/local/lib"
+ENV DENO_USE_CGROUPS=1
+ENV DENO_DIR /deno-dir/
+ENV DENO_INSTALL_ROOT /usr/local
+
+ARG DENO_VERSION
+ENV DENO_VERSION=${DENO_VERSION}
+COPY --from=bin /deno /bin/deno
+
 
 # Architecture information passed by HA build system
 ARG BUILD_ARCH
@@ -25,27 +52,27 @@ LABEL \
   org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
   maintainer="Tuan Dangschulz <tuan@example.com>"
 
-# Create persistent volume folder
+# Create persistent data directory
 RUN mkdir -p /var/db/tiddly
 
-# Copy root filesystem
+# Copy root filesystem (e.g., scripts, entrypoint)
 COPY rootfs /
 
-# Install required packages
-RUN apk add --no-cache bash curl unzip git
+# Install required packages including Node.js and npm
+RUN apk add --no-cache curl bash git nodejs npm
 
-# Install Deno (using logic from official alpine.dockerfile)
-ENV DENO_VERSION=1.44.1
-
-RUN \
-  if [ "$BUILD_ARCH" = "amd64" ]; then ARCH="x86_64"; \
-  elif [ "$BUILD_ARCH" = "aarch64" ]; then ARCH="aarch64"; \
-  else echo "Unsupported architecture: $BUILD_ARCH" && exit 1; fi && \
-  curl -fsSL "https://dl.deno.land/release/v${DENO_VERSION}/deno-${ARCH}-unknown-linux-gnu.zip" -o deno.zip && \
-  unzip deno.zip && \
-  rm deno.zip && \
-  chmod 755 deno && \
-  mv deno /usr/local/bin/deno
-
-# Set working directory (optional)
+# Set working directory for the app
 WORKDIR /opt/tiddlywiki
+
+# Optional: clone your app or prepare it
+# RUN git clone https://codeberg.org/valpackett/tiddlypwa.git .
+
+# Optional: verify Node.js installation
+RUN deno --version
+
+# Optional: install dependencies if package.json exists
+# COPY package.json ./
+# RUN npm install
+
+# Optional: entrypoint (adjust rootfs/etc/services.d/ if needed)
+# CMD ["node", "your-script.js"]
