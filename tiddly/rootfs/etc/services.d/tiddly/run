@@ -2,13 +2,25 @@
 
 PORT=$(bashio::config 'port')
 DB_PATH=$(bashio::config 'db_path')
-ADMIN_PASSWORD_HASH=$(bashio::config 'c')
+ADMIN_PASSWORD_HASH=$(bashio::config 'admin_password_hash')
 ADMIN_PASSWORD_SALT=$(bashio::config 'admin_password_salt')
+BASE_PATH=$(bashio::config 'base_path')
+HOST=$(bashio::config 'host')
 
 mkdir -p "$(dirname "$DB_PATH")"
 
-echo "[INFO] Generated admin password hash: $ADMIN_PASSWORD_HASH"
-echo "[INFO] Used salt: $ADMIN_PASSWORD_SALT"
+
+if [ -z "$ADMIN_PASSWORD_HASH" ] || [ -z "$ADMIN_PASSWORD_SALT" ]; then
+    echo "#######################################################################"
+    echo "# WARNING: Admin password hash and/or salt is NOT set!                #"
+    echo "# The wiki will be open without authentication!                       #"
+    echo "# Please generate hash and salt at https://tiddly.packett.cool/#HashAdminPassword"
+    echo "# and set them in the add-on configuration.                           #"
+    echo "#######################################################################"
+else
+    echo "[INFO] admin password hash: $ADMIN_PASSWORD_HASH"
+    echo "[INFO] Used salt: $ADMIN_PASSWORD_SALT"
+fi
 
 deno --version
 
@@ -21,4 +33,10 @@ exec deno run --unstable-broadcast-channel --allow-env \
     --allow-read="$(dirname "$DB_PATH")" \
     --allow-write="$(dirname "$DB_PATH")" \
     --allow-net=":${PORT}" \
-	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts
+    --basepath="$BASE_PATH" \
+	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts \
+    --port "$PORT" \
+    --host "$HOST" \
+    --db-path "$DB_PATH" \
+    --admin-password-hash "$ADMIN_PASSWORD_HASH" \
+    --admin-password-salt "$ADMIN_PASSWORD_SALT"
