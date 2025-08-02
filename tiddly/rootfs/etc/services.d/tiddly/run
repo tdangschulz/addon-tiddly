@@ -2,23 +2,24 @@
 
 PORT=$(bashio::config 'port')
 DB_PATH=$(bashio::config 'db_path')
-HASH=$(bashio::config 'admin_password_hash')
-SALT=$(bashio::config 'admin_password_salt')
+PLAINTEXT_PASSWORD=$(bashio::config 'admin_password')
 
 mkdir -p "$(dirname "$DB_PATH")"
 
-# Log Konfiguration
-echo "[INFO] Starting TiddlyPWA on port $PORT"
-echo "[INFO] DB path: $DB_PATH"
-echo "[INFO] Admin password hash is ${#HASH} characters long"
-echo "[INFO] Admin salt is ${#SALT} characters long"
+# Optional: Passwort-Hash erzeugen, falls gesetzt
+if bashio::var.has_value "$PLAINTEXT_PASSWORD"; then
+    echo "[INFO] Plaintext password provided, generating bcrypt hash..."
+    HASH=$(node -e "const bcrypt = require('bcryptjs'); console.log(bcrypt.hashSync('$PLAINTEXT_PASSWORD', 10));")
+    export ADMIN_PASSWORD_HASH="$HASH"
+    echo "[INFO] Generated admin password hash is ${#HASH} characters long"
+else
+    echo "[INFO] No admin password set. Open access."
+    export ADMIN_PASSWORD_HASH=""
+fi
 
-# Export als Umgebungsvariablen für run.ts
-export ADMIN_PASSWORD_HASH=$HASH
-export ADMIN_PASSWORD_SALT=$SALT
-export DB_PATH=$DB_PATH
+export DB_PATH="$DB_PATH"
 
-# Deno-Start mit voller Log-Ausgabe
+# Start server
 exec deno run --unstable-broadcast-channel \
   --allow-env \
   --allow-read="$(dirname "$DB_PATH")" \

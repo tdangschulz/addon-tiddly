@@ -59,7 +59,7 @@ RUN mkdir -p /var/db/tiddly
 COPY rootfs /
 
 # Install required packages including Node.js and npm
-RUN apk add --no-cache curl bash git nodejs npm
+RUN deno install -g npm:bcrypt
 
 # Set working directory for the app
 WORKDIR /opt/tiddlywiki
