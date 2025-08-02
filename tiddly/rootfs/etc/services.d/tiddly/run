@@ -11,7 +11,7 @@ deno --version
 # Optional: Passwort-Hash erzeugen, falls gesetzt
 if bashio::var.has_value "$PLAINTEXT_PASSWORD"; then
     echo "[INFO] Plaintext password provided, generating bcrypt hash..."
-    HASH=$(deno eval --allow-env 'import { hashSync } from "https://deno.land/x/bcrypt/mod.ts"; console.log(hashSync(Deno.env.get("PLAINTEXT_PASSWORD") ?? "admin", 10));')
+    HASH=$(deno eval 'import { hashSync } from "https://deno.land/x/bcrypt/mod.ts"; console.log(hashSync(Deno.env.get("PLAINTEXT_PASSWORD") ?? "admin", 10));' --allow-env)
     export ADMIN_PASSWORD_HASH="$HASH"
     echo "[INFO] Generated admin password hash is ${#HASH} characters long"
 else
@@ -22,7 +22,10 @@ fi
 export DB_PATH="$DB_PATH"
 
 # Start server
-exec deno run --unstable-broadcast-channel --allow-env \
-	--allow-read="$(dirname "$DB_PATH")" --allow-write="$(dirname "$DB_PATH")" \
-	--allow-net=":${PORT}" \
-	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts
+exec deno run \
+    https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts \
+    --unstable-broadcast-channel \
+    --allow-env \
+    --allow-read="$(dirname "$DB_PATH")" \
+    --allow-write="$(dirname "$DB_PATH")" \
+    --allow-net=":${PORT}"
