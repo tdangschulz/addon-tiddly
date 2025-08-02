@@ -16,7 +16,7 @@ ports:
 options:
   port: 8000
   db_path: "/var/db/tiddly/pwa.db"
-  admin_password: ""
+  admin_password: "change_me"
 schema:
   port: int
   db_path: str
