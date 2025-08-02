@@ -2,34 +2,12 @@
 
 PORT=$(bashio::config 'port')
 DB_PATH=$(bashio::config 'db_path')
-PLAINTEXT_PASSWORD=$(bashio::config 'admin_password')
+ADMIN_PASSWORD_HASH=$(bashio::config 'admin_password_hash')
+ADMIN_PASSWORD_SALT=$(bashio::config 'admin_password_salt')
 
 mkdir -p "$(dirname "$DB_PATH")"
 
 deno --version
-
-# Optional: Passwort-Hash erzeugen, falls gesetzt
-if bashio::var.has_value "$PLAINTEXT_PASSWORD"; then
-    echo "[INFO] Plaintext password provided, generating Argon2 hash and salt..."
-    VARS=$(deno eval '
-        import { hash } from "https://deno.land/x/argon2ian@2.0.0/src/argon2.ts";
-        import { encode } from "https://deno.land/std@0.192.0/encoding/base64url.ts";
-        const password = Deno.args[0];
-        const salt = crypto.getRandomValues(new Uint8Array(32));
-        const hashValue = encode(hash(new TextEncoder().encode(password), salt));
-        const saltValue = encode(salt);
-        console.log("ADMIN_PASSWORD_HASH=" + hashValue);
-        console.log("ADMIN_PASSWORD_SALT=" + saltValue);
-    ' "$PLAINTEXT_PASSWORD")
-    # Setze die Umgebungsvariablen aus der Deno-Ausgabe
-    eval "$VARS"
-    echo "[INFO] Generated admin password hash: $ADMIN_PASSWORD_HASH"
-    echo "[INFO] Used salt: $ADMIN_PASSWORD_SALT"
-else
-    echo "[INFO] No admin password set. Open access."
-    export ADMIN_PASSWORD_HASH=""
-    export ADMIN_PASSWORD_SALT=""
-fi
 
 export DB_PATH="$DB_PATH"
 
