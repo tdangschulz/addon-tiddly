@@ -6,11 +6,10 @@ With this add-on, you can maintain a self-hosted personal wiki, journal, or know
 
 ## 🧰 Features
 
-- Full TiddlyWiki server (Node.js edition)
+- Full TiddlyWiki server (Run with deno)
 - Automatic startup with Home Assistant
 - Customizable port and storage path
 - Simple local backup with persistent storage
-- Optional authentication layer (coming soon)
 
 ## 🛠️ Installation
 
