@@ -20,9 +20,7 @@ fi
 export DB_PATH="$DB_PATH"
 
 # Start server
-exec deno run --unstable-broadcast-channel \
-  --allow-env \
-  --allow-read="$(dirname "$DB_PATH")" \
-  --allow-write="$(dirname "$DB_PATH")" \
-  --allow-net=":${PORT}" \
-  https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts
+exec deno run --unstable-broadcast-channel --allow-env \
+	--allow-read="$(dirname "$DB_PATH")" --allow-write="$(dirname "$DB_PATH")" \
+	--allow-net=":${PORT}" \
+	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts
