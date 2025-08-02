@@ -1,6 +1,5 @@
 #!/command/with-contenv bashio
 
-PORT=$(bashio::config 'port')
 DB_PATH=$(bashio::config 'db_path')
 ADMIN_PASSWORD_HASH=$(bashio::config 'admin_password_hash')
 ADMIN_PASSWORD_SALT=$(bashio::config 'admin_password_salt')
@@ -33,13 +32,13 @@ ARGS=(
   --allow-env
   --allow-read="$(dirname "$DB_PATH")"
   --allow-write="$(dirname "$DB_PATH")"
-  --allow-net=":${PORT}"
+  --allow-net=":8000"
 )
 
 SCRIPT_URL="https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts"
 
 CMD_ARGS=(
-  --port "$PORT"
+  --port "8000"
   --db-path "$DB_PATH"
   --admin-password-hash "$ADMIN_PASSWORD_HASH"
   --admin-password-salt "$ADMIN_PASSWORD_SALT"
