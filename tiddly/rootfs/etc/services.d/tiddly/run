@@ -33,10 +33,10 @@ exec deno run --unstable-broadcast-channel --allow-env \
     --allow-read="$(dirname "$DB_PATH")" \
     --allow-write="$(dirname "$DB_PATH")" \
     --allow-net=":${PORT}" \
-    --basepath="$BASE_PATH" \
 	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts \
     --port "$PORT" \
     --host "$HOST" \
+    --basepath="$BASE_PATH" \
     --db-path "$DB_PATH" \
     --admin-password-hash "$ADMIN_PASSWORD_HASH" \
     --admin-password-salt "$ADMIN_PASSWORD_SALT"
