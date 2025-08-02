@@ -13,7 +13,7 @@ if bashio::var.has_value "$PLAINTEXT_PASSWORD"; then
     echo "[INFO] Plaintext password provided, generating bcrypt hash..."
     HASH=$(deno eval 'import bcrypt from "npm:bcryptjs"; console.log(bcrypt.hashSync(Deno.args[0], 10));' "$PLAINTEXT_PASSWORD")    
     export ADMIN_PASSWORD_HASH="$HASH"
-    echo "[INFO] Generated admin password hash is ${#HASH} characters long"
+    echo "[INFO] Generated admin password hash is ${#HASH} characters long"s
 else
     echo "[INFO] No admin password set. Open access."
     export ADMIN_PASSWORD_HASH=""
@@ -22,10 +22,7 @@ fi
 export DB_PATH="$DB_PATH"
 
 # Start server
-exec deno run \
-    https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts \
-    --unstable-broadcast-channel \
-    --allow-env \
-    --allow-read="$(dirname "$DB_PATH")" \
-    --allow-write="$(dirname "$DB_PATH")" \
-    --allow-net=":${PORT}"
+exec deno run --unstable-broadcast-channel --allow-env \
+	--allow-read=/var/db/tiddly --allow-write=/var/db/tiddly \
+	--allow-net=:8000 \
+	https://codeberg.org/valpackett/tiddlypwa/raw/branch/release/server/run.ts
