@@ -7,9 +7,14 @@ ADMIN_PASSWORD_SALT=$(bashio::config 'admin_password_salt')
 
 mkdir -p "$(dirname "$DB_PATH")"
 
+echo "[INFO] Generated admin password hash: $ADMIN_PASSWORD_HASH"
+echo "[INFO] Used salt: $ADMIN_PASSWORD_SALT"
+
 deno --version
 
 export DB_PATH="$DB_PATH"
+export ADMIN_PASSWORD_HASH="$ADMIN_PASSWORD_HASH"
+export ADMIN_PASSWORD_SALT="$ADMIN_PASSWORD_SALT"
 
 # Start server
 exec deno run --unstable-broadcast-channel --allow-env \
