@@ -11,7 +11,7 @@ deno --version
 # Optional: Passwort-Hash erzeugen, falls gesetzt
 if bashio::var.has_value "$PLAINTEXT_PASSWORD"; then
     echo "[INFO] Plaintext password provided, generating bcrypt hash..."
-    HASH=$(deno eval "import { hashSync } from 'https://deno.land/x/bcrypt/mod.ts'; console.log(hashSync(Deno.args[0], 10));" "$PLAINTEXT_PASSWORD")
+    HASH=$(deno eval 'import bcrypt from "npm:bcryptjs"; console.log(bcrypt.hashSync(Deno.args[0], 10));' "$PLAINTEXT_PASSWORD")    
     export ADMIN_PASSWORD_HASH="$HASH"
     echo "[INFO] Generated admin password hash is ${#HASH} characters long"
 else
