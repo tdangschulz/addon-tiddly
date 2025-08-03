@@ -60,6 +60,8 @@ LABEL \
 # Create persistent data directory
 RUN mkdir -p /var/db/tiddly
 
+RUN apk add --no-cache gettext
+
 # Copy root filesystem (e.g., scripts, entrypoint)
 COPY rootfs /
 
