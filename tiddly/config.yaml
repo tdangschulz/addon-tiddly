@@ -1,7 +1,7 @@
 name: TiddlyPWA
 slug: tiddly
 description: Run TiddlyWiki PWA server with full offline and sync support via Deno
-version: 1.0.51
+version: 1.0.52
 url: https://github.com/tdangschulz/addon-tiddly
 arch:
   - aarch64
