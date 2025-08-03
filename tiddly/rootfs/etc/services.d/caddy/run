@@ -14,18 +14,4 @@ if [ ! -s /etc/caddy/Caddyfile ]; then
   exit 1
 fi
 
-caddy start --config /etc/caddy/Caddyfile --adapter caddyfile
-sleep 2
-
-if nc -z localhost 8443; then
-  echo "✅ Caddy mit SSL aktiv auf Port 8443"
-else
-  echo "❌ Caddy/SSL nicht aktiv auf Port 8443"
-  exit 1
-fi
-
-# Stoppe Caddy Background-Instance, wenn du stattdessen `run` verwenden willst
-caddy stop
-
-# Starte Caddy im Vordergrund für HA
 exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
