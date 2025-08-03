@@ -1,2 +1,9 @@
 #!/usr/bin/with-contenv bash
+export CERTFILE=$(bashio::config 'certfile')
+export KEYFILE=$(bashio::config 'keyfile')
+
+envsubst < /etc/caddy/Caddyfile.template > /etc/caddy/Caddyfile
+echo "Caddyfile generated:"
+cat /etc/caddy/Caddyfile
+
 exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
