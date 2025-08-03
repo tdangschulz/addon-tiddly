@@ -1,4 +1,5 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bashio
+
 export CERTFILE=$(bashio::config 'certfile')
 export KEYFILE=$(bashio::config 'keyfile')
 
