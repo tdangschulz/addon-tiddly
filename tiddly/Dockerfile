@@ -76,3 +76,7 @@ RUN deno --version
 
 # Optional: entrypoint (adjust rootfs/etc/services.d/ if needed)
 # CMD ["node", "your-script.js"]
+
+# Install Caddy (static binary)
+RUN wget -O /usr/bin/caddy "https://github.com/caddyserver/caddy/releases/download/v2.8.4/caddy_2.8.4_linux_amd64" \
+    && chmod +x /usr/bin/caddy

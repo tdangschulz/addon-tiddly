@@ -17,7 +17,7 @@ ports_description:
   8080/tcp: Web interface (TiddlyWiki server)
 map:
   - config:rw
-  - ssl
+  - ssl:rw
   - share:rw
   - media:rw
   - backup:rw

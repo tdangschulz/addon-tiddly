@@ -1,0 +1,4 @@
+:443 {
+    tls /ssl/${CERTFILE} /ssl/${KEYFILE}
+    reverse_proxy localhost:8000
+}
