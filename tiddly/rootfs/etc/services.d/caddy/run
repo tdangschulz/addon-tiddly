@@ -5,6 +5,8 @@ export KEYFILE=$(bashio::config 'keyfile')
 
 envsubst < /etc/caddy/Caddyfile.template > /etc/caddy/Caddyfile
 
+ls -l /ssl
+
 cat /etc/caddy/Caddyfile
 
 if [ ! -s /etc/caddy/Caddyfile ]; then
