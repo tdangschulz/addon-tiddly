@@ -1,7 +1,7 @@
 name: TiddlyPWA
 slug: tiddly
 description: Run TiddlyWiki PWA server with full offline and sync support via Deno
-version: 1.0.49
+version: 1.0.50
 url: https://github.com/tdangschulz/addon-tiddly
 arch:
   - aarch64
@@ -13,7 +13,7 @@ panel_icon: mdi:web
 map:
   - ssl
 ports:
-  8000/tcp: 443
+  443/tcp: 8000
 options:
   db_path: "/var/db/tiddly/pwa.db"
   admin_password_hash: ""
