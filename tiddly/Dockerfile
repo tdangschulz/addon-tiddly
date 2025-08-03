@@ -6,7 +6,7 @@ FROM ${BIN_IMAGE} AS bin
 FROM gcr.io/distroless/cc AS cc
 
 # --- Build-Layer: Caddy mit optionalen Plugins bauen ---
-FROM caddy:2-builder-alpine AS caddy
+FROM caddy:2-alpine AS caddy
 
 FROM ghcr.io/hassio-addons/base:18.0.3
 
@@ -15,7 +15,7 @@ FROM ghcr.io/hassio-addons/base:18.0.3
 COPY --from=cc --chown=root:root --chmod=755 /lib/*-linux-gnu/* /usr/local/lib/
 COPY --from=cc --chown=root:root --chmod=755 /lib/ld-linux-* /lib/
 # Caddy-Binary kopieren
-COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
 RUN addgroup --gid 1000 deno \
   && adduser --uid 1000 --disabled-password deno --ingroup deno \
