@@ -15,3 +15,16 @@ if [ ! -s /etc/caddy/Caddyfile ]; then
 fi
 
 exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+
+# Start Caddy
+caddy start --config /etc/caddy/Caddyfile
+
+# Warte kurz, bis der Dienst hochgefahren ist
+sleep 2
+
+# Prüfen, ob Port 8443 geöffnet ist
+if nc -z localhost 8443; then
+  echo "✅ Caddy mit SSL aktiv auf Port 8443"
+else
+  echo "❌ Caddy/SSL nicht aktiv auf Port 8443"
+fi
